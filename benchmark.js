@@ -1,11 +1,3 @@
-if (typeof btoa === 'undefined') {
-    global.btoa = str => Buffer.from(str, 'binary').toString('base64');
-}
-
-if (typeof atob === 'undefined') {
-    global.atob = b64Encoded => Buffer.from(b64Encoded, 'base64').toString('binary');
-}
-
 const { performance } = require('perf_hooks');
 
 const crypto = require('crypto');
@@ -58,7 +50,6 @@ for (let i = 0; i <= 20; i++) {
     });
 }
 
-// result.forEach(e => e.ratio = e.speed / vanillaSpeed);
 console.table(result);
 
 })();
