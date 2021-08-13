@@ -9,10 +9,9 @@ const {
 } = GLOBAL;
 
 const wasmMemory = new WebAssembly.Memory({
-    'initial': 0,
+    'initial': 1,
 });
-/** @type {Uint8Array} */
-let wasmHeapU8;
+let wasmHeapU8 = new Uint8Array(wasmMemory.buffer);
 /**
  * @param {Number} size
  */
@@ -22,7 +21,6 @@ const wasmMemoryAlloc = size => {
     wasmMemory['grow'](Math.ceil((size - wasmMemoryLength) / 65536));
     wasmHeapU8 = new Uint8Array(wasmMemory.buffer);
 };
-wasmMemoryAlloc(1);
 const $memoryStackPointer = 0x01000;
 const $memoryFreeArea = 0x01000;
 const $sizeofHmacSha256Ctx = 232;
