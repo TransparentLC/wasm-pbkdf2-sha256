@@ -9,7 +9,7 @@
 #include <string.h>
 
 #include "emscripten-exports.h"
-#define pbkdf2_sha256 $$WASMEXPORTS_pbkdf2_sha256$$
+#define pbkdf2_sha256 __WASMEXPORTS_pbkdf2_sha256__
 
 typedef struct sha256_ctx_t
 {

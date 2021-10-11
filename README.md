@@ -27,19 +27,18 @@ pbkdf2Sha256.ready = wasmReady;
 需要安装 [Emscripten](https://emscripten.org) 和 [Node.js](https://nodejs.org) 环境。
 
 ```bash
-npm install -g terser
+npm install
 node build.js
 ```
 
 运行后可以在 `dist` 目录找到以下文件：
 
 * `pbkdf2-sha256.{mode}.wasm`
-* `pbkdf2-sha256-wasm.{mode}.js`
-* `pbkdf2-sha256-wasm.{mode}.d.ts`
-* `pbkdf2-sha256-wasm.{mode}.min.js`
-* `pbkdf2-sha256-wasm.{mode}.min.d.ts`
+* `pbkdf2-sha256-wasm.{mode}.{moduleFormat}.js`
+* `pbkdf2-sha256-wasm.{mode}.{moduleFormat}.min.js`
+* `pbkdf2-sha256-wasm.d.ts`
 
-`{mode}` 是 size 和 speed 之一，对应文件大小或运行速度的优化（也就是 Emscripten 编译时使用的 `-Oz` 或 `-O3` 参数）。使用时在浏览器 / Node.js 中加载 JS 文件即可，WASM 文件可以不保留。
+`{mode}` 是 size 和 speed 之一，对应文件大小或运行速度的优化（也就是 Emscripten 编译时使用的 `-Oz` 或 `-O3` 参数）。`{moduleFormat}` 是 `cjs` 和 `esm` 之一，分别对应 CommonJS 和 ES Modules 模块。使用时在浏览器 / Node.js 中加载 JS 文件即可，WASM 文件可以不保留。
 
 > size 大约是 4 KB，而 speed 大约是 7 KB，但是速度是 size 的 4x 以上，所以还是选 speed 吧 (っ'ω')っ
 

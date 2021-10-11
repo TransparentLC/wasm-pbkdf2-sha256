@@ -1,2 +1,3 @@
+node_modules
 dist
-test-massive.js
+package-lock.json

@@ -1,5 +1,3 @@
-(() => {
-
 /** @type {globalThis} */
 const GLOBAL = typeof globalThis !== 'undefined' ? globalThis : (global || self);
 
@@ -30,7 +28,7 @@ const $sizeofHmacSha256Ctx = 232;
 /** @type {WebAssembly.Exports} */
 /**
  * @type {{
- *  $$WASMEXPORTS_pbkdf2_sha256$$(
+ *  __WASMEXPORTS_pbkdf2_sha256__(
  *      ctx: Pointer,
  *      key: Pointer, keyLength: Number,
  *      salt: Pointer, saltLength: Number,
@@ -43,7 +41,7 @@ let wasmExports;
 /** @type {Promise<void>} */
 const wasmReady = new Promise(resolve => WebAssembly
     .instantiate(
-        Uint8Array.from(atob('$$WASM_BASE64$$'), e => e.charCodeAt()),
+        Uint8Array.from(atob(__WASM_BASE64__), e => e.charCodeAt()),
         {
             'env': {
                 'memory': wasmMemory,
@@ -77,7 +75,7 @@ const pbkdf2Sha256 = (key, salt, rounds, derivedKeyLength) => {
     wasmMemoryAlloc($memoryFreeArea + $sizeofHmacSha256Ctx + keyLength + saltLength + derivedKeyLength);
     wasmHeapU8.set(key, $memoryFreeArea + $sizeofHmacSha256Ctx);
     wasmHeapU8.set(salt, $memoryFreeArea + $sizeofHmacSha256Ctx + keyLength);
-    wasmExports['$$WASMEXPORTS_pbkdf2_sha256$$'](
+    wasmExports[__WASMEXPORTS_pbkdf2_sha256__](
         $memoryFreeArea,
         $memoryFreeArea + $sizeofHmacSha256Ctx, keyLength,
         $memoryFreeArea + $sizeofHmacSha256Ctx + keyLength, saltLength,
@@ -90,11 +88,3 @@ const pbkdf2Sha256 = (key, salt, rounds, derivedKeyLength) => {
     );
 };
 pbkdf2Sha256.ready = wasmReady;
-
-if (typeof module !== 'undefined') {
-    module.exports = pbkdf2Sha256;
-} else {
-    GLOBAL['pbkdf2Sha256'] = pbkdf2Sha256;
-}
-
-})()

@@ -9,8 +9,8 @@ if (typeof atob === 'undefined') {
 const { performance } = require('perf_hooks');
 
 const crypto = require('crypto');
-const pbkdf2Size = require('./dist/pbkdf2-sha256-wasm.size.min.js');
-const pbkdf2Speed = require('./dist/pbkdf2-sha256-wasm.speed.min.js');
+const pbkdf2Size = require('./dist/pbkdf2-sha256-wasm.size.cjs.min.js');
+const pbkdf2Speed = require('./dist/pbkdf2-sha256-wasm.speed.cjs.min.js');
 
 (async () => {
 
