@@ -5,7 +5,7 @@ const ReplacementCollector = require('./src/replacement-collector.js');
 
 (async () => {
 
-await fs.promises.rm('dist', { recursive: true });
+await fs.promises.rm('dist', { recursive: true, force: true });
 await fs.promises.mkdir('dist');
 
 const template = await fs.promises.readFile('src/pbkdf2-sha256-wasm-template.js', { encoding: 'utf-8' });
