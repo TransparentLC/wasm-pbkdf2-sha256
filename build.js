@@ -5,7 +5,7 @@ const ReplacementCollector = require('./src/replacement-collector.js');
 
 (async () => {
 
-await fs.promises.rmdir('dist', { recursive: true });
+await fs.promises.rm('dist', { recursive: true });
 await fs.promises.mkdir('dist');
 
 const template = await fs.promises.readFile('src/pbkdf2-sha256-wasm-template.js', { encoding: 'utf-8' });
@@ -26,22 +26,28 @@ await Promise.all([
         'src/pbkdf2-sha256-wasm-template.js'
     ].map(f => fs.promises.readFile(f, { encoding: 'utf-8' }).then(e => rc.collect(e)).catch(() => {})));
 
-    console.log(`${optimizeMode} emcc output:\n`, await new Promise((resolve, reject) => childProcess.execFile(
-        'emcc',
-        [
-            'src/wasm/memcpy.c',
-            'src/wasm/memset.c',
-            'src/wasm/pbkdf2_sha256.c',
-            optimizeParam,
-            ...otherParam,
-            ...rc.exportEmscriptenDefine(),
-            '-v',
-            '-flto',
-            '-s', 'SIDE_MODULE=2',
-            '-o', `dist/pbkdf2-sha256.${optimizeMode}.wasm`,
-        ],
-        (error, stdout, stderr) => error ? reject(error) : resolve(stderr)
-    )));
+    const emccArgs = [
+        'src/wasm/memcpy.c',
+        'src/wasm/memset.c',
+        'src/wasm/pbkdf2_sha256.c',
+        optimizeParam,
+        ...otherParam,
+        ...rc.exportEmscriptenDefine(),
+        '-v',
+        '-flto',
+        '-s', 'SIDE_MODULE=2',
+        '-o', `dist/pbkdf2-sha256.${optimizeMode}.wasm`,
+    ];
+    console.log(`${optimizeMode} emcc output:\n`, await new Promise((resolve, reject) => process.platform === 'win32' ?
+        childProcess.execFile(
+            'cmd', ['/s', '/c', 'emcc', ...emccArgs],
+            (error, stdout, stderr) => error ? reject(error) : resolve(stderr)
+        ) :
+        childProcess.execFile(
+            'emcc', emccArgs,
+            (error, stdout, stderr) => error ? reject(error) : resolve(stderr)
+        )
+    ));
     rc.mapping.set('__WASM_BASE64__', (await fs.promises.readFile(`dist/pbkdf2-sha256.${optimizeMode}.wasm`, { encoding: 'base64' })).replace(/=+$/g, ''));
 
     await Promise.all(['cjs', 'esm'].map(async moduleFormat => {
