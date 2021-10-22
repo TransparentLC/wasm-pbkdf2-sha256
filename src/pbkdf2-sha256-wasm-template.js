@@ -41,12 +41,12 @@ let wasmExports;
 /** @type {Promise<void>} */
 const wasmReady = new Promise(resolve => WebAssembly
     .instantiate(
-        Uint8Array.from(atob(__WASM_BASE64__), e => e.charCodeAt()),
+        Uint8Array.from(atob('__WASM_BASE64__'), e => e.charCodeAt()),
         {
-            'env': {
-                'memory': wasmMemory,
-                '__memory_base': 0x0000,
-                '__stack_pointer': new WebAssembly.Global(
+            '__env__': {
+                '__memory__': wasmMemory,
+                '____memory_base__': 0x0000,
+                '____stack_pointer__': new WebAssembly.Global(
                     {
                         'mutable': true,
                         'value': 'i32',
@@ -75,7 +75,7 @@ const pbkdf2Sha256 = (key, salt, rounds, derivedKeyLength) => {
     wasmMemoryAlloc($memoryFreeArea + $sizeofHmacSha256Ctx + keyLength + saltLength + derivedKeyLength);
     wasmHeapU8.set(key, $memoryFreeArea + $sizeofHmacSha256Ctx);
     wasmHeapU8.set(salt, $memoryFreeArea + $sizeofHmacSha256Ctx + keyLength);
-    wasmExports[__WASMEXPORTS_pbkdf2_sha256__](
+    wasmExports['__WASMEXPORTS_pbkdf2_sha256__'](
         $memoryFreeArea,
         $memoryFreeArea + $sizeofHmacSha256Ctx, keyLength,
         $memoryFreeArea + $sizeofHmacSha256Ctx + keyLength, saltLength,
